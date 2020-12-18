@@ -1,5 +1,3 @@
-$(document).ready(function(){
-
 
   var firebaseConfig = {
     apiKey: "AIzaSyDQIA8NkxJjoa04eps6mD57hAxcNd8vk1A",
@@ -18,35 +16,49 @@ $(document).ready(function(){
 
 
   todo.on('value',function(snapshot){
-    console.log(snapshot.val());
-    let data = snapshot.val()
-    $('#pending').html('');
-    $('#completed').html('');
+  
+    let data = snapshot.val();
+    document.querySelector('#inprogress').innerHTML = "";
+    document.querySelector('#completed').innerHTML="";
+    document.querySelector('#pending').innerHTML = "";
+    
+    
+
     for(let key in data){
       
-
+   
       if(data[key].status==="pending"){
-
-      $('#pending').append(`<div class="card">
+      document.querySelector('#pending').innerHTML +=`<div class="card">
                              <div class="card-body">
                                 <h5>${data[key].task}</h5>
                                 <button class="btn btn-warning btn-sm edit" data-id="${key}">Edit</button>
+                                <button class="btn btn-success btn-sm movetoprogress" data-id="${key}">Move To Progress</button>
                                 <button class="btn btn-danger btn-sm delete" data-id="${key}">Delete</button>
-                                <button class="btn btn-success btn-sm complete" data-id="${key}">Completed</button>
                               </div>
-                            </div>`)
+                            </div>`
 
+
+      }else if(data[key].status==="completed"){
+        document.querySelector('#completed').innerHTML += `<div class="card">
+                        <div class="card-body">
+                          <h5>${data[key].task}</h5>
+                          <button class="btn btn-success btn-sm movetoprogress" data-id="${key}">Back to Progress</button>
+                          <button class="btn btn-danger btn-sm delete" data-id="${key}">Delete</button>
+                        </div>
+                      </div>
+                    </div>`
 
       }else{
-        $('#completed').append(`<div class="card">
+
+        document.querySelector('#inprogress').innerHTML += `<div class="card">
                         <div class="card-body">
                           <h5>${data[key].task}</h5>
                           <button class="btn btn-success btn-sm gotopending" data-id="${key}">Pending</button>
-                          <button class="btn btn-danger btn-sm deletenow" data-id="${key}">Delete</button>
+                          <button class="btn btn-danger btn-sm gotocomplete" data-id="${key}">Complete</button>
                         </div>
                       </div>
-                    </div>`)
-
+                    </div>`
+        
       }
 
 
@@ -55,87 +67,164 @@ $(document).ready(function(){
 
   })
 
-  $('#addone').click(function(){
-    $('#open').append(`<input type="text" name="" class="form-control" id="task-id"></input><br>
-                    <button class="btn btn-danger" id="add-task">Add Task</button>`)
-  });
+
+document.querySelector('#addone').addEventListener('click',function(){
+  document.querySelector('#open').innerHTML += `<input type="text" name="" class="form-control" id="task-id"></input><br>
+  <button class="btn btn-danger" id="add-task">Add Task</button>`;
+})
 
 
+
+
+  document.querySelector('#open').addEventListener('click',function(event){
+
+  let target = event.target; // 
+  if (target.id != 'add-task'){
+    return; 
+  }else{
+    let task = document.querySelector('#task-id').value;
+    let todoref = todo.push({
+      task: task,
+      status: 'pending'
+    });
+    document.querySelector('#task-id').value = '';
+    document.querySelector('#open').innerHTML='';
+
+
+  }
+
+  })
+
+
+  document.querySelector('#pending').addEventListener('click',function(event){
+
+    let target = event.target; // 
+    if (!target.classList.contains('edit')){
+      return; 
+    }else{
+
+        let taskId = target.getAttribute('data-id');
+        let changed_task = prompt("Edit Task");
+        firebase.database().ref('todo/'+taskId).update({
+          task : changed_task,
+        });
+    }
   
-
-  $('#open').on('click','#add-task',function(){
-    let task = $('#task-id').val();
-    let todoRef = todo.push({
-      task : task,
-      status : 'pending'
-    });
-    $('#task-id').val('');
-
-    $('#open').html('');
-
-  });
-  
+    })
 
 
 
-  $('#add-task').click(function(){
-    let task = $('#task-id').val();
 
-    let todoRef = todo.push({
-      task : task,
-      status : 'pending'
-    });
-    $('#task-id').val('');
-  });
+document.querySelector('#pending').addEventListener('click',function(event){
 
-  $('#pending').on('click','.edit',function(){
+  let target = event.target;
+  if(!target.classList.contains('delete')){
+    return;
+  }else{
+    let taskId =  target.getAttribute('data-id');
 
+    console.log(taskId)
 
-    let taskId =   $(this).data("id");
-    let changed_task = prompt("Edit Task");
-    firebase.database().ref('todo/' + taskId).update({
-      task : changed_task,
-    });
-
-  });
-
-
-
-  $('#pending').on('click','.delete',function(){
-     
-   let taskId =   $(this).data("id");
     firebase.database().ref('todo/' + taskId).remove();
-  });
+
+  }
+
+})
 
 
-  $('#pending').on('click','.complete',function(){
-     
-    let taskId =   $(this).data("id");
-     firebase.database().ref('todo/' + taskId).update({
-       status:'Completed'
-     });
-   });
 
-   $('#completed').on('click','.gotopending',function(){
-    let taskId =   $(this).data("id");
-    firebase.database().ref('todo/' + taskId).update({
-      status:'pending'
-    });
-   });
-   $('#completed').on('click','.deletenow',function(){
-    let taskId =   $(this).data("id");
-    firebase.database().ref('todo/' + taskId).remove()
-   });
+
+   document.querySelector('#pending').addEventListener('click',function(event){
+    target = event.target;
+    if(!target.classList.contains('movetoprogress')){
+
+      return;
+
+    }else{
+
+      let taskId = target.getAttribute('data-id');
+
+      firebase.database().ref('todo/'+taskId).update({
+        status:'progress',
+      })
+
+    }
+
+   })
+
+   document.querySelector('#inprogress').addEventListener('click',function(event){
+
+    let target = event.target;
+
+    if(!target.classList.contains('gotopending')){
+      return
+    }else{
+      let taskId = target.getAttribute('data-id');
+
+      firebase.database().ref('todo/'+taskId).update({
+        status:'pending',
+      })
+    }
+
+   })
+
+   
+   document.querySelector('#inprogress').addEventListener('click',function(event){
+
+    let target = event.target;
+
+    if(!target.classList.contains('gotocomplete')){
+      return
+    }else{
+      let taskId = target.getAttribute('data-id');
+
+      firebase.database().ref('todo/'+taskId).update({
+        status:'completed',
+      })
+    }
+
+   })
+
+
+
+
+   document.querySelector('#completed').addEventListener('click',function(event){
+
+    let target = event.target;
+
+    if(!target.classList.contains('movetoprogress')){
+      return
+    }else{
+      let taskId = target.getAttribute('data-id');
+      firebase.database().ref('todo/'+taskId).update({
+        status:'progress'
+      });
+    }
+
+   })
+
+
+   
+
+
+   document.querySelector('#completed').addEventListener('click',function(event){
+
+    let target = event.target;
+
+    if(!target.classList.contains('delete')){
+      return
+    }else{
+      let taskId = target.getAttribute('data-id');
+
+      firebase.database().ref('todo/' + taskId).remove()
+    }
+
+   })
 
 
 
     
-  
 
-  
-
-
-})
 
 
 
