@@ -26,7 +26,7 @@
 
     for(let key in data){
       
-      console.log
+   
       if(data[key].status==="pending"){
       document.querySelector('#pending').innerHTML +=`<div class="card">
                              <div class="card-body">
