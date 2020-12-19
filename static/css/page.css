@@ -1,0 +1,6 @@
+.bg_color{
+background: #8E0E00;  
+background: -webkit-linear-gradient(to right, #1F1C18, #801004, #c92b19); 
+background: linear-gradient(to right, #1F1C18, #801004, #c92b19); 
+
+}
