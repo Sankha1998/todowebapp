@@ -1,5 +1,9 @@
 <img src=https://img.shields.io/badge/build%20with-JavaScript-yellow><img src="https://img.shields.io/badge/Firebase-yellow"><img src="https://img.shields.io/badge/-HTML5-orange"><img src="https://img.shields.io/badge/-Bootstrap5-blueviolet"><img src="https://img.shields.io/badge/deployed%20in-GitHub-blue"> <img src="https://img.shields.io/badge/domain-Web%20Development-green.svg">
 
+
+![Screenshot](webappview.gif)
+
+
 # todowebapp
 Todo app is a SAAS, which is capable of handling the daily task of any user. This web app tracks one single task in three different phases starting from "pending" to "in progress" then finally "completed" phase.
 
