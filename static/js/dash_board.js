@@ -1,10 +1,7 @@
-document.addEventListener("DOMContentLoaded", function(event) {
-  
 
 if(localStorage.getItem('name')=== null){
-    window.location.href = 'index.html';
+  window.location.href = 'index.html';
 }
-
 
 let userid = localStorage.getItem('userid');
 
@@ -14,24 +11,8 @@ document.querySelector('#user_img').setAttribute('src',localStorage.getItem('pro
 document.querySelector('#user_name').textContent = localStorage.getItem('name');
 
 
-document.querySelector('#logout').addEventListener('click',function(){
-   
-    firebase.auth().signOut().then(function() {
+document.addEventListener("DOMContentLoaded", function(event) {
 
-        localStorage.removeItem('name');
-        localStorage.removeItem('profilepic');
-        localStorage.removeItem('userid');
-        window.location.href='index.html';
-
-
-    }).catch(function(error) {
-
-        alert("error occured");
-
-    });
-
-
-});
 
 let todo = firebase.database().ref('users/'+ userid);
 
@@ -63,6 +44,25 @@ document.querySelector('#open').addEventListener('click',function(event){
     })
     
 
+    document.querySelector('#logout').addEventListener('click',function(){
+   
+      firebase.auth().signOut().then(function() {
+  
+          localStorage.removeItem('name');
+          localStorage.removeItem('profilepic');
+          localStorage.removeItem('userid');
+          window.location.href='index.html';
+  
+  
+      }).catch(function(error) {
+  
+          alert("error occured");
+  
+      });
+  
+  
+  });
+  
 
 
     todo.on('value',function(snapshot){
@@ -140,8 +140,7 @@ document.querySelector('#open').addEventListener('click',function(event){
         }
     })
 
-
-
+  });
 
   document.querySelector('#pending').addEventListener('click',function(event){
   
@@ -272,8 +271,7 @@ document.querySelector('#open').addEventListener('click',function(event){
     })
   
           
-    });
-
+    
 
 
    
