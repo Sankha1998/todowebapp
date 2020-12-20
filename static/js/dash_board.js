@@ -135,7 +135,7 @@ document.querySelector('#open').addEventListener('click',function(event){
   
   
         }
-
+    })
 
 
 
@@ -151,7 +151,9 @@ document.querySelector('#open').addEventListener('click',function(event){
         let changed_task = prompt("Edit Task");
         firebase.database().ref('users/'+userid+'/'+taskId).update({
           task : changed_task,
-        });
+        })
+
+       
     }
   
     })
@@ -166,10 +168,10 @@ document.querySelector('#open').addEventListener('click',function(event){
   }else{
     let taskId =  target.getAttribute('data-id');
   
-    console.log(taskId)
+   
   
-    firebase.database().ref('users/'+userid+'/'+taskId).remove();
-    window.location.href='dashboard.html';
+    firebase.database().ref('users/'+userid+'/'+taskId).remove()
+   
   
   }
   
@@ -262,7 +264,6 @@ document.querySelector('#open').addEventListener('click',function(event){
   
       firebase.database().ref('users/'+userid+'/'+taskId).remove();
 
-      window.location.href = 'dashboard.html';
     }
   
     })
@@ -271,4 +272,4 @@ document.querySelector('#open').addEventListener('click',function(event){
     
 
 
-    })
+   
