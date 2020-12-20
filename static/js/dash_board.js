@@ -1,3 +1,6 @@
+document.addEventListener("DOMContentLoaded", function(event) {
+  
+
 if(localStorage.getItem('name')=== null){
     window.location.href = 'index.html';
 }
@@ -269,7 +272,8 @@ document.querySelector('#open').addEventListener('click',function(event){
     })
   
           
-    
+    });
+
 
 
    
