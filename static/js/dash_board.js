@@ -173,6 +173,7 @@ document.querySelector('#open').addEventListener('click',function(event){
    
   
     firebase.database().ref('users/'+userid+'/'+taskId).remove()
+    window.location.href = 'dashboard.html';
    
   
   }
@@ -265,6 +266,7 @@ document.querySelector('#open').addEventListener('click',function(event){
       let taskId = target.getAttribute('data-id');
   
       firebase.database().ref('users/'+userid+'/'+taskId).remove();
+      window.location.href = 'dashboard.html';
 
     }
   
