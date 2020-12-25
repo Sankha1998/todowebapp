@@ -31,12 +31,19 @@ document.querySelector('#open').addEventListener('click',function(event){
         return; 
     }else{
         let task = document.querySelector('#task-id').value;
-        let todoref = todo.push({
-        task: task,
-        status: 'pending'
-        });
-        document.querySelector('#task-id').value = '';
-        document.querySelector('#open').innerHTML='';
+        
+        if(task.length>0){
+          todo.push({
+          task: task,
+          status: 'pending'
+          });
+          document.querySelector('#task-id').value = '';
+          document.querySelector('#open').innerHTML='';
+        }else{
+
+          alert("can't add null task");
+
+        }
     
     
     }
@@ -148,13 +155,24 @@ document.querySelector('#open').addEventListener('click',function(event){
     if (!target.classList.contains('edit')){
       return; 
     }else{
-  
-        let taskId = target.getAttribute('data-id');
-        let changed_task = prompt("Edit Task");
-        firebase.database().ref('users/'+userid+'/'+taskId).update({
-          task : changed_task,
-        })
 
+
+      let taskId = target.getAttribute('data-id');
+      let changed_task = prompt("Edit Task");
+
+      
+
+      if(changed_task.length>0){
+  
+             
+              firebase.database().ref('users/'+userid+'/'+taskId).update({
+                task : changed_task,
+              })
+      }else{
+        alert("can't add null task");
+        let changed_task = prompt("Edit Task");
+
+      }
        
     }
   
@@ -253,6 +271,7 @@ document.querySelector('#open').addEventListener('click',function(event){
     })
   
   
+
     
   
   
@@ -269,8 +288,24 @@ document.querySelector('#open').addEventListener('click',function(event){
       window.location.href = 'dashboard.html';
 
     }
+
+
+    
   
     })
+
+
+    function validation(task_name){
+
+      if(task_name !== null){
+        return 1
+      }else{
+        return 0
+      }
+
+
+
+    }
   
           
     
